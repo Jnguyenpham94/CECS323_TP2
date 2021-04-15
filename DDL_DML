@@ -1,0 +1,156 @@
+CREATE TABLE Departments(
+  departmentName VARCHAR(20) NOT NULL,
+  CONSTRAINT department_pk PRIMARY KEY(departmentName)
+);
+
+CREATE TABLE Courses(
+  departmentName VARCHAR(20) NOT NULL,
+  courseNumber INT NOT NULL,
+  courseName VARCHAR(20) NOT NULL,
+  units INT NOT NULL,
+  description VARCHAR(100),
+  CONSTRAINT section_fk FOREIGN KEY(departmentName) REFERENCES Departments (departmentName),
+  CONSTRAINT course_pk PRIMARY KEY (departmentName, courseNumber) --pk of course
+);
+
+CREATE TABLE Instructors (
+  firstName VARCHAR(20) NOT NULL,
+  lastName VARCHAR(20) NOT NULL,
+  CONSTRAINT instructor_pk PRIMARY KEY(firstName, lastName)
+);
+
+CREATE TABLE Sections(
+  sectionNumber INT NOT NULL,
+  days VARCHAR(10) NOT NULL,
+  times VARCHAR(5) NOT NULL,
+  departmentName VARCHAR(20) NOT NULL,
+  courseNumber INT NOT NULL,
+  firstName VARCHAR(20) NOT NULL,
+  lastName VARCHAR(20) NOT NULL,
+  CONSTRAINT section_pk PRIMARY KEY (departmentName, courseNumber, sectionNumber),--pk of section,
+  CONSTRAINT section_fk1 FOREIGN KEY (departmentName, courseNumber) 
+    REFERENCES Courses (departmentName, courseNumber), --fk from course for section
+  CONSTRAINT section_fk2 FOREIGN KEY(firstName, lastName) 
+    REFERENCES Instructors (firstName, lastName) --fk from Instructor for section
+);
+
+CREATE TABLE Students(
+  studentID INT NOT NULL,
+  lastName VARCHAR(20) NOT NULL,
+  firstName VARCHAR(20) NOT NULL,
+  CONSTRAINT student_pk PRIMARY KEY (studentID) --pk/sk of student
+);
+
+CREATE TABLE Teams(  
+  teamName VARCHAR(20) NOT NULL,
+  departmentName VARCHAR(20) NOT NULL,
+  courseNumber INT NOT NULL,
+  sectionNumber INT NOT NULL,
+  CONSTRAINT team_fk FOREIGN KEY(departmentName, courseNumber, sectionNumber) 
+    REFERENCES Sections (departmentName, courseNumber, sectionNumber),
+  CONSTRAINT team_pk PRIMARY KEY(departmentName, courseNumber, sectionNumber) 
+);
+
+CREATE TABLE Enrollments(
+  studentID INT NOT NULL,
+  departmentName VARCHAR(20) NOT NULL,
+  courseNumber INT NOT NULL,
+  sectionNumber INT NOT NULL,
+  semester VARCHAR(20) NOT NULL,
+  yearEnrolled INT NOT NULL,
+  CONSTRAINT enrollment_fk1 FOREIGN KEY(studentID) REFERENCES Students (studentID),
+  CONSTRAINT enrollment_fk2 FOREIGN KEY(departmentName, courseNumber, sectionNumber) 
+    REFERENCES Sections (departmentName, courseNumber, sectionNumber),
+  CONSTRAINT enrollment_fk3 FOREIGN KEY(departmentName, courseNumber, sectionNumber) 
+    REFERENCES Teams (departmentName, courseNumber, sectionNumber),
+  CONSTRAINT enrollment_pk PRIMARY KEY(studentID, departmentName, courseNumber, sectionNumber)
+);
+
+CREATE TABLE Surveys(
+  reviewerID INT NOT NULL,
+  studentID INT NOT NULL,
+  rating INT NOT NULL,
+  CONSTRAINT survey_fk1 FOREIGN KEY(reviewerID) REFERENCES Students (studentID),
+  CONSTRAINT survey_fk2 FOREIGN KEY(studentID) REFERENCES Students (studentID),
+  CONSTRAINT survey_pk PRIMARY KEY(reviewerID, studentID, rating) --pk of Survey 
+);
+
+CREATE TABLE Dimensions(
+  questions VARCHAR(40) NOT NULL,
+  departmentName VARCHAR(20) NOT NULL,
+  courseNumber INT NOT NULL,
+  sectionNumber INT NOT NULL,
+  reviewerID INT NOT NULL,
+  studentID INT NOT NULL,
+  rating int NOT NULL,
+  CONSTRAINT dimenstion_fk1 FOREIGN KEY(departmentName, courseNumber, sectionNumber)
+    REFERENCES Sections(departmentName, courseNumber, sectionNumber),
+  CONSTRAINT dimenstion_fk2 FOREIGN KEY(reviewerID, studentID, rating) 
+    REFERENCES Surveys (reviewerID, studentID, rating),
+  CONSTRAINT dimension_pk PRIMARY KEY(departmentName, courseNumber, sectionNumber, questions)
+);
+
+INSERT INTO Department (departmentName)
+VALUES ('Libral Arts'),
+       ('Business'),
+       ('Education'),
+       ('Engineering'),
+       ('Computer Science')
+       ('Health and Human Services'),
+       ('Natural Science and Mathematics'),
+       ('International Education');
+
+INSERT INTO Course (departmentName, courseNumber, courseName, units, description)
+VALUES ('Computer Science', )
+
+INSERT INTO Instructors (firstName, lastName)
+VALUES ('Aliyah', 'Shaw'),
+       ('George', 'Raymond'),
+       ('Jesse', 'Orr'),
+       ('Tiffany', 'Hensley'),
+       ('Jodie', 'Caldwell'),
+
+INSERT INTO Sections
+VALUES ()
+
+INSERT INTO Students (studentID, firstName, lastName)
+VALUES (001, 'Kyra', 'Mora'),
+       (002, 'Teresa', 'Williamson'),
+       (003, 'Alex', 'Sims'),
+       (004, 'Katy', 'Henderson'),
+       (005, 'Paul', 'Rojas'),
+       (006, 'Zoey', 'Grant'),
+       (007, 'Lucas', 'Davidson'),
+       (008, 'Eliza', 'Stevenson'),
+       (009, 'Alicia', 'Chavez'),
+       (010, 'Victor', 'Berry'),
+       (011, 'Seth', 'Meyer'),
+       (012, 'Hana', 'Park'),
+       (013, 'Caroline', 'Gomez'),
+       (014, 'Marshall', 'Thompson'),
+
+INSERT INTO Teams
+VALUES ()
+
+INSERT INTO Enrollments
+VALUES ()
+
+INSERT INTO Survey
+VALUES ()
+
+INSERT INTO Dimensions
+VALUES ()
+
+
+
+
+--used to delete tables
+--DROP TABLE Student;
+--DROP TABLE Course;
+--DROP TABLE Section;
+--DROP TABLE Team;
+--DROP TABLE Survey;
+--DROP TABLE Dimension;
+--DROP TABLE Instructor;
+--DROP TABLE Department;
+--Drop TABLE Enrollments;
